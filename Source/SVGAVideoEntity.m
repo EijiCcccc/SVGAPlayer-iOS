@@ -15,6 +15,19 @@
 
 #define MP3_MAGIC_NUMBER "ID3"
 
+@implementation UIImage (SVGA)
+
+- (UIImage *)imageByResizeToSize:(CGSize)size {
+    if (size.width <= 0 || size.height <= 0) return nil;
+    UIGraphicsBeginImageContextWithOptions(size, NO, self.scale);
+    [self drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
+@end
+
 @interface SVGAVideoEntity ()
 
 @property (nonatomic, assign) CGSize videoSize;
@@ -94,6 +107,7 @@ static dispatch_semaphore_t videoSemaphore;
                     if (imageData != nil) {
                         UIImage *image = [[UIImage alloc] initWithData:imageData scale:2.0];
                         if (image != nil) {
+                            image = [image imageByResizeToSize:image.size];
                             [images setObject:image forKey:[key stringByDeletingPathExtension]];
                         }
                     }
@@ -165,6 +179,7 @@ static dispatch_semaphore_t videoSemaphore;
                 if (imageData != nil) {
                     UIImage *image = [[UIImage alloc] initWithData:imageData scale:2.0];
                     if (image != nil) {
+                        image = [image imageByResizeToSize:image.size];
                         [images setObject:image forKey:key];
                     }
                 }
@@ -177,6 +192,7 @@ static dispatch_semaphore_t videoSemaphore;
             } else {
                 UIImage *image = [[UIImage alloc] initWithData:protoImages[key] scale:2.0];
                 if (image != nil) {
+                    image = [image imageByResizeToSize:image.size];
                     [images setObject:image forKey:key];
                 }
             }
@@ -242,4 +258,3 @@ static dispatch_semaphore_t videoSemaphore;
 @property (nonatomic, copy) NSString *matteKey;
 
 @end
-
