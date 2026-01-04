@@ -23,7 +23,10 @@
     [self drawInRect:CGRectMake(0, 0, size.width, size.height)];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    return image;
+    if(image) {
+        return image;
+    }
+    return [UIImage new];
 }
 
 @end
