@@ -19,14 +19,14 @@
 
 - (UIImage *)imageByResizeToSize:(CGSize)size {
     if (size.width <= 0 || size.height <= 0) return nil;
-    UIGraphicsBeginImageContextWithOptions(size, NO, self.scale);
-    [self drawInRect:CGRectMake(0, 0, size.width, size.height)];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    if(image) {
-        return image;
-    }
-    return [UIImage new];
+    UIGraphicsImageRendererFormat *format = [[UIGraphicsImageRendererFormat alloc] init];
+    format.scale = self.scale;
+    format.opaque = NO;
+    
+    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:size format:format];
+    return [renderer imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+        [self drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    }];
 }
 
 @end
