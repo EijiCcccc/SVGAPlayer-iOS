@@ -381,6 +381,7 @@ static NSOperationQueue *unzipQueue;
     unsigned half_length = (unsigned)[data length] / 2;
     
     NSMutableData *decompressed = [NSMutableData dataWithLength: full_length + half_length];
+    if (!decompressed) return nil;
     BOOL done = NO;
     int status;
     
@@ -412,7 +413,9 @@ static NSOperationQueue *unzipQueue;
     if (done)
     {
         [decompressed setLength: strm.total_out];
-        return [NSData dataWithData: decompressed];
+        if (decompressed && decompressed.length > 0) {
+            return [NSData dataWithData: decompressed];
+        }
     }
     else return nil;
 }
